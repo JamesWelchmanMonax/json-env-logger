@@ -163,7 +163,11 @@ where
             key: kv::Key<'kvs>,
             val: kv::Value<'kvs>,
         ) -> Result<(), kv::Error> {
-            write!(self.writer, ",\"{}\":{}", key, val).unwrap();
+            // This is REALLY hacky. Log values in quotes.
+            // This means bools log as "true" "false" (with quotes)
+            // and numbers also log inside quotes as strings.
+            // Every value is a string, but it is valid JSON.
+            write!(self.writer, ",\"{}\":\"{}\"", key, val).unwrap();
             Ok(())
         }
     }
